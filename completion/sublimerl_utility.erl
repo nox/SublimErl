@@ -34,5 +34,19 @@
 main(["lib_dir"]) ->
 	io:format("~s", [code:lib_dir()]);
 
+main(["format", FilePath]) ->
+	Formatted = case epp_dodger:parse_file(FilePath) of 
+		{ok, Forms} ->
+			case lists:keymember(error, 1, Forms) of
+				false ->
+					erl_prettypr:format(erl_recomment:recomment_forms(Forms, erl_comment_scan:file(FilePath)));
+				true ->
+					""
+			end;
+		{error, _} ->
+			""
+	end,
+	io:format("~p", [Formatted]);
+
 main(_) ->
 	halt(1).
