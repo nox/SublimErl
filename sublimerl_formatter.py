@@ -32,10 +32,23 @@ from sublimerl import SublimErlLauncher, SublimErlTextCommand
 
 # listener
 class SublimErlFormatter():
-	pass
+	def __init__(self, launcher):
+		self.launcher = launcher
+
+	def format(self, code):
+		# save to temp file
+		plugin_path = self.launcher.plugin_path()
+		completions_path = os.path.join(plugin_path, "completion")
 
 
 # start format
 class SublimErlFormatter(SublimErlTextCommand):
 	def run_command(self, edit):
-		pass
+		# init
+		launcher = SublimErlLauncher(view, show_log=False, new=False)
+		if launcher.available == False: return
+
+		# format
+		formatter = SublimErlFormatter(launcher)
+		
+
